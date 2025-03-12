@@ -14,6 +14,10 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get("/api/check-key", (req, res) => {
+    res.json({ keyExists: !!process.env.OPENAI_API_KEY });
+});
+
 app.post("/api/detect-ai", async (req, res) => {
     const { text } = req.body;
     if (!text) {
