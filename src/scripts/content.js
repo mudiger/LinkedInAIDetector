@@ -68,6 +68,7 @@
 // });
 
 
+
 chrome.storage.local.get("aiDetectionEnabled", (data) => {
     if (data.aiDetectionEnabled === false) return;
 
@@ -85,24 +86,26 @@ chrome.storage.local.get("aiDetectionEnabled", (data) => {
             const textContent = postTextElement.innerText.trim();
             if (!textContent) return;
 
-            try {
-                chrome.runtime.sendMessage({ action: "fetchAIAnalysis", text: textContent }, (response) => {
-                    if (response?.result) {
-                        const aiBadge = document.createElement('span');
-                        aiBadge.classList.add('ai-detection-result');
-                        aiBadge.innerText = `${response.result.text}`;
-                        aiBadge.style.backgroundColor = getColor(response.result.percentage);
+            // ✅ Send text content to background script for AI analysis
+            chrome.runtime.sendMessage({ action: "fetchAIAnalysis", text: textContent }, (response) => {
+                if (response?.result) {
+                    const aiBadge = document.createElement('span');
+                    aiBadge.classList.add('ai-detection-result');
+                    aiBadge.innerText = `${response.result.text}`;
+                    aiBadge.style.fontWeight = 'bold';
+                    aiBadge.style.marginLeft = '4px';
+                    aiBadge.style.padding = '0px 8px';
+                    aiBadge.style.borderRadius = '10px';
+                    aiBadge.style.color = 'white';
+                    aiBadge.style.backgroundColor = getColor(response.result.percentage);
 
-                        timestampElement.appendChild(aiBadge);
+                    timestampElement.appendChild(aiBadge);
 
-                        chrome.storage.local.get("postCount", (data) => {
-                            chrome.storage.local.set({ postCount: (data.postCount || 0) + 1 });
-                        });
-                    }
-                });
-            } catch (err) {
-                console.error('Error calling AI API:', err);
-            }
+                    chrome.storage.local.get("postCount", (data) => {
+                        chrome.storage.local.set({ postCount: (data.postCount || 0) + 1 });
+                    });
+                }
+            });
         });
     });
 

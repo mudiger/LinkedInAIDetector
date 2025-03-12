@@ -2,28 +2,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const postCountElement = document.getElementById("post-count");
     const toggleDetection = document.getElementById("toggle-detection");
     const toggleStatus = document.getElementById("toggle-status");
+    const logoImg = document.getElementById("logo-img");
+    const coffeeImg = document.getElementById("coffee-img");
 
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("logo-img").src = chrome.runtime.getURL("assets/icon.png");
-        document.getElementById("coffee-img").src = chrome.runtime.getURL("assets/coffee.png");
-    });
-    
-    // Load the stored post count
+    // ✅ Set correct image sources
+    logoImg.src = chrome.runtime.getURL("assets/icon.png");
+    coffeeImg.src = chrome.runtime.getURL("assets/coffee.png");
+
+    // ✅ Load stored values
     chrome.storage.local.get(["postCount", "aiDetectionEnabled"], (data) => {
         postCountElement.innerText = `Total Posts Detected: ${data.postCount || 0}`;
-        const isEnabled = data.aiDetectionEnabled !== false; // Default to true
-        toggleDetection.checked = isEnabled;
-        toggleStatus.innerText = isEnabled ? "ON" : "OFF";
+        toggleDetection.checked = data.aiDetectionEnabled !== false;
+        toggleStatus.innerText = toggleDetection.checked ? "ON" : "OFF";
     });
 
-    // Handle toggle switch
+    // ✅ Handle toggle switch
     toggleDetection.addEventListener("change", () => {
         const isEnabled = toggleDetection.checked;
         chrome.storage.local.set({ aiDetectionEnabled: isEnabled }, () => {
             toggleStatus.innerText = isEnabled ? "ON" : "OFF";
+
+            // ✅ Reload LinkedIn tab
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                if (tabs.length > 0) {
-                    chrome.tabs.reload(tabs[0].id);
+                if (tabs.length > 0 && tabs[0].id !== undefined) {
+                    chrome.scripting.executeScript({
+                        target: { tabId: tabs[0].id },
+                        func: () => window.location.reload()
+                    });
                 }
             });
         });
