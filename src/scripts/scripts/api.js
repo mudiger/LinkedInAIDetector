@@ -38,7 +38,7 @@
 
 export async function checkWithChatGPT(text) {
     try {
-        const response = await fetch("https://your-vercel-project.vercel.app/api/detect-ai", { // Replace with your actual API URL
+        const response = await fetch("https://linkedin-ai-detector.vercel.app/", { // Replace with your actual API URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text })
