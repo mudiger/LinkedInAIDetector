@@ -68,8 +68,6 @@
 // });
 
 
-import { checkWithChatGPT } from "./api.js";
-
 chrome.storage.local.get("aiDetectionEnabled", (data) => {
     if (data.aiDetectionEnabled === false) return;
 
@@ -88,17 +86,19 @@ chrome.storage.local.get("aiDetectionEnabled", (data) => {
             if (!textContent) return;
 
             try {
-                const result = await checkWithChatGPT(textContent);
+                chrome.runtime.sendMessage({ action: "fetchAIAnalysis", text: textContent }, (response) => {
+                    if (response?.result) {
+                        const aiBadge = document.createElement('span');
+                        aiBadge.classList.add('ai-detection-result');
+                        aiBadge.innerText = `${response.result.text}`;
+                        aiBadge.style.backgroundColor = getColor(response.result.percentage);
 
-                const aiBadge = document.createElement('span');
-                aiBadge.classList.add('ai-detection-result');
-                aiBadge.innerText = `${result.text}`;
-                aiBadge.style.backgroundColor = getColor(result.percentage);
+                        timestampElement.appendChild(aiBadge);
 
-                timestampElement.appendChild(aiBadge);
-
-                chrome.storage.local.get("postCount", (data) => {
-                    chrome.storage.local.set({ postCount: (data.postCount || 0) + 1 });
+                        chrome.storage.local.get("postCount", (data) => {
+                            chrome.storage.local.set({ postCount: (data.postCount || 0) + 1 });
+                        });
+                    }
                 });
             } catch (err) {
                 console.error('Error calling AI API:', err);

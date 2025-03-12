@@ -4,12 +4,21 @@ const fetch = require("node-fetch");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
+// ✅ Enable CORS for Chrome Extensions
+app.use(cors({
+    origin: "*", // Allows all origins
+    methods: "GET,POST,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization"
+}));
+
 app.use(express.json());
 
 app.post("/api/detect-ai", async (req, res) => {
     const { text } = req.body;
-    if (!text) return res.status(400).json({ error: "No text provided" });
+    if (!text) {
+        return res.status(400).json({ error: "No text provided" });
+    }
 
     try {
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -43,6 +52,7 @@ app.post("/api/detect-ai", async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log("API server running on port 3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}`);
 });

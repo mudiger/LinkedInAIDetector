@@ -3,6 +3,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleDetection = document.getElementById("toggle-detection");
     const toggleStatus = document.getElementById("toggle-status");
 
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("logo-img").src = chrome.runtime.getURL("assets/icon.png");
+        document.getElementById("coffee-img").src = chrome.runtime.getURL("assets/coffee.png");
+    });
+    
     // Load the stored post count
     chrome.storage.local.get(["postCount", "aiDetectionEnabled"], (data) => {
         postCountElement.innerText = `Total Posts Detected: ${data.postCount || 0}`;

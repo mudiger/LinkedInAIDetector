@@ -36,26 +36,26 @@
 //     }
 // };
 
-export async function checkWithChatGPT(text) {
-    try {
-        const response = await fetch("https://linkedin-ai-detector.vercel.app/", { // Replace with your actual API URL
+chrome.runtime.onInstalled.addListener(() => {
+    console.log("LinkedIn AI Detector Extension Installed!");
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "fetchAIAnalysis") {
+        fetch("https://linkedin-ai-detector.vercel.app/api/detect-ai", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text })
-        });
+            body: JSON.stringify({ text: message.text })
+        })
+        .then(response => response.json())
+        .then(data => sendResponse({ result: data }))
+        .catch(error => sendResponse({ error: "API Request Failed" }));
 
-        const data = await response.json();
-        if (data.text) {
-            return { text: data.text, percentage: data.percentage };
-        }
-
-        return "Error: No valid response.";
-
-    } catch (error) {
-        console.error("🚨 API Request Failed:", error);
-        return "Error: API request failed.";
+        return true; // Keeps sendResponse open for async response
     }
-}
+});
+
+
 
 
 
