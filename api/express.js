@@ -6,24 +6,20 @@ const app = express();
 
 app.use(express.json());
 
-// ✅ Manually set CORS headers for Chrome Extension
+// Set CORS headers for Chrome Extension
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");  // Allows all origins
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Allow GET & POST
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allow headers
 
     if (req.method === "OPTIONS") {
-        return res.sendStatus(200); // Handle preflight requests
+        return res.sendStatus(200);
     }
     next();
 });
 
-// ✅ Debugging route to check if API key is loaded
-app.get("/api/check-key", (req, res) => {
-    res.json({ keyExists: !!process.env.OPENAI_API_KEY });
-});
 
-// ✅ Main API route for AI detection
+// API route for AI detection
 app.post("/api/detect-ai", async (req, res) => {
     const { text } = req.body;
     if (!text) {
@@ -38,7 +34,7 @@ app.post("/api/detect-ai", async (req, res) => {
                 "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: "llama3-70b-8192",
+                model: "deepseek-r1-distill-llama-70b",
                 messages: [
                     { role: "system", content: "You are an AI text detector. Given a piece of text, return only a percentage score of how likely it is AI-generated. Format your response as: 'x% AI' where x is the likelihood of AI generation. Do not provide explanations or any additional text." },
                     { role: "user", content: `Analyze this text: ${text}` }
