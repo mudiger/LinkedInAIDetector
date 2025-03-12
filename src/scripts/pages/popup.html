@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn AI Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            width: 250px;
+            padding: 15px;
+        }
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        #post-count {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .coffee-container {
+            margin-top: 15px;
+        }
+        .coffee-container img {
+            width: 120px;
+            cursor: pointer;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <img src="icon.png" alt="LinkedIn AI Detector Logo" class="logo">
+    <h2>LinkedIn AI Detector</h2>
+    <p id="post-count">Total Posts Detected: 0</p>
+
+    <label class="switch">
+        <input type="checkbox" id="toggle-detection" checked>
+        <span class="slider round"></span>
+    </label>
+    <p>AI Detection: <span id="toggle-status">ON</span></p>
+
+    <div class="coffee-container">
+        <a href="https://buymeacoffee.com/postsmg" target="_blank">
+            <img src="coffee.png" alt="Buy Me a Coffee">
+        </a>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 20px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(14px);
+    }
+</style>
+
+</html>
