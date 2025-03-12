@@ -1,23 +1,29 @@
 const express = require("express");
-const cors = require("cors");
 const fetch = require("node-fetch");
 require("dotenv").config();
 
 const app = express();
 
-// ✅ Enable CORS for Chrome Extensions
-app.use(cors({
-    origin: "*", // Allows all origins
-    methods: "GET,POST,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization"
-}));
-
 app.use(express.json());
 
+// ✅ Manually set CORS headers for Chrome Extension
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");  // Allows all origins
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Allow GET & POST
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Allow headers
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200); // Handle preflight requests
+    }
+    next();
+});
+
+// ✅ Debugging route to check if API key is loaded
 app.get("/api/check-key", (req, res) => {
     res.json({ keyExists: !!process.env.OPENAI_API_KEY });
 });
 
+// ✅ Main API route for AI detection
 app.post("/api/detect-ai", async (req, res) => {
     const { text } = req.body;
     if (!text) {
@@ -56,6 +62,7 @@ app.post("/api/detect-ai", async (req, res) => {
     }
 });
 
+// ✅ Start the server (local testing only)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}`);
