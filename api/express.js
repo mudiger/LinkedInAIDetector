@@ -57,3 +57,9 @@ app.post("/api/detect-ai", async (req, res) => {
         res.status(500).json({ error: "API request failed." });
     }
 });
+
+// ✅ Start the server (local testing only)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}`);
+});
