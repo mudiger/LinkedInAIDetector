@@ -4,6 +4,10 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/express.js"
+    },
+    {
+      "src": "/privacy-policy",
+      "dest": "/src/pages/privacy-policy.html"
     }
   ]
 }
