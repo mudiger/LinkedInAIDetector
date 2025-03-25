@@ -1,4 +1,4 @@
-## LinkedIn AI Detector 
+## LinkedIn AI Detector (https://getsmg.vercel.app/)
 LinkedIn AI Detector is a **Chrome extension** that helps users analyze LinkedIn posts and determine whether the content is AI-generated. It provides credibility insights, helping **recruiters, content creators, and LinkedIn users** distinguish between human-written and AI-generated text.
 
 ## ⚡ Features  
